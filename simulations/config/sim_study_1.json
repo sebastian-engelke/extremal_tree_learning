@@ -1,0 +1,19 @@
+{
+    "params":{
+        "d":[20],
+        "n":[100,200,300,500,700,1000,1500,2000], 
+        "method":["maxstable"],
+        "model":["HR", "dirichlet"],
+        "ML":[true],
+        "cens":[true],
+        "edge.max":[1],
+        "noise":["tree"]
+      },
+      
+      "other_params":{
+          "nsim":[300], 
+          "seed":248, 
+          "random_seed_for_each": null 
+      }
+}
+
