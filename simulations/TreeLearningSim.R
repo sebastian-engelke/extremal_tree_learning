@@ -11,13 +11,13 @@ library(jsonlite)
 
 # change from here ----
 sim_setting <- "sim_study_1"
-strategy <-  "parallel"  # "sequential" or "parallel"
+strategy <-  "sequential"  # "sequential" or "parallel"
 n_workers <- 96
 sim_function <- "sim_study"
 # to here ----
 
 # import json
-json <- fromJSON(here("code/parallel_gcloud/config", paste0(sim_setting, ".json")))
+json <- fromJSON(here("/simulations/config", paste0(sim_setting, ".json")))
 
 # process parameters
 param <- json$params %>% 
@@ -50,8 +50,8 @@ m <- nrow(sims_args)
 
 # set up file names
 dttime <- gsub(pattern = " |:", x = Sys.time(), replacement = "_")
-file_log <- here("code/parallel_gcloud/output", "progress.txt")
-file_rds <- here("code/parallel_gcloud/output", paste0(sim_setting,  "-", dttime, ".rds"))
+file_log <- here("simulations/output", "progress.txt")
+file_rds <- here("simulations/output", paste0(sim_setting,  "-", dttime, ".rds"))
 
 
 # set up cluster
