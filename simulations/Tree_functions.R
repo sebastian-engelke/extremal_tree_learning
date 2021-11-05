@@ -128,7 +128,7 @@ sim_study <- function(d = 10, n = 100, p = NULL,
   X <- X + Y^{0.5}
   
   ptm <- proc.time()[1]
-  chi.est <- emp_chi_mat(data=X, p=p)
+  chi.est <- emp_chi(data=X, p=p)
   tree.chi.est <- igraph::mst(graph=graph.full, 
                               weights = 2-chi.est[ends(graph.full,
                                                        E(graph.full))],
@@ -156,10 +156,11 @@ sim_study <- function(d = 10, n = 100, p = NULL,
   if(ML){
     ptm <- proc.time()[1]
     # xx <- graphicalExtremes::mst_HR(data = X, cens = cens, p = p)
-    xx <- mst_HR_parallel(data = X, cens = cens, p = p) # check if faster?
+    #xx <- mst_HR_parallel(data = X, cens = cens, p = p) # check if faster?
+    xx <- emst(data = X, p = p, method = "ML", cens = cens)
     time.mat[4] <- proc.time()[1] - ptm
     G.ML.est <- xx$Gamma
-    tree.ML.est <- xx$tree
+    tree.ML.est <- xx$graph
   }
   
   

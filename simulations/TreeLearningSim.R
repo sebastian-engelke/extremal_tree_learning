@@ -25,9 +25,9 @@ param <- json$params %>%
   as_tibble()
 
 if (!has_name(param, "p")){
-    param <- param %>% 
-      mutate(k = floor(n ** .8),
-             p = 1 - k / n)
+  param <- param %>% 
+    mutate(k = floor(n ** .8),
+           p = 1 - k / n)
 }
 
 # join with simulation repetitions
@@ -83,12 +83,12 @@ cat("**** Simulation ---", sim_setting , "**** \n", file = file_log)
 ll <- foreach(i = 1:m, .combine = bind_rows, 
               .options.future = list(scheduling = FALSE),
               .errorhandling = "remove") %dopar% {
-
-  # Run simulation
-  cat("Simulation", i, "out of", m, "\n", file = file_log, append = TRUE)
-  wrapper_sim(i, other_args$rowid[i], eval(as.name(sim_function)), fun_args)
-  
-}
+                
+                # Run simulation
+                cat("Simulation", i, "out of", m, "\n", file = file_log, append = TRUE)
+                wrapper_sim(i, other_args$rowid[i], eval(as.name(sim_function)), fun_args)
+                
+              }
 sink(file = file_log, append = TRUE)
 cat("\n Time \n")
 print(proc.time() - ptm)

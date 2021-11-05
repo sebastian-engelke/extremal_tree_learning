@@ -47,7 +47,6 @@ ggplot(dat,
   theme(legend.position = "none") +
   theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
   geom_line(size = 1, alpha = .75) +
-  #geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   xlab(expression(paste("Extremal correlation ", chi, sep="")))+
   ylab(expression(paste("Extremal variogram ", Gamma, sep=""))) +
   coord_cartesian(xlim=c(0,1),ylim = c(0,10))+
@@ -331,22 +330,21 @@ ggsave(filename = "HR_srr_d20_chiedge_treeNoise.pdf", height = 7, width=7)
 ##### Simulation Study 3: IID Noise
 ###################################
 
-##### Simulation Study 3: IID Noise, Combined Empirical Variogram
+##### Simulation Study 3: IID Noise, n=500
 
 dat <- read_rds("data/sim_study_3-HR_nsim300_vario_CL_bothNoise.rds") %>% 
   unnest(cols = c("perf")) %>% 
   mutate(n=as.character(n)) %>% 
   mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
   filter(category=="srr") %>% 
-  filter(type=="srr3") %>%  
   filter(noise=="iid") %>% 
-  filter(n!="5000") %>% 
+  filter(n=="500") %>% 
   group_by(category, type, p, n) %>% 
   summarise(mean_value = mean(value))
 
 
 ggplot(dat, 
-       aes(x = 1-p, y = mean_value, col = n)) +
+       aes(x = 1-p, y = mean_value, col = type)) +
   theme(legend.position = "none") +
   theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
   geom_line(size = 1, alpha = .75) +
@@ -355,62 +353,83 @@ ggplot(dat,
   xlab("Exceedance probability k/n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
-ggsave(filename = "HR_srr_vario_d20_kn.pdf", height = 7, width=7)
+ggsave(filename = "HR_srr_n500_d20_kn.pdf", height = 7, width=7)
 
 
 
-##### Simulation Study 3: IID Noise, Censored Likelihood
+##### Simulation Study 3: IID Noise, n=1000
 
 dat <- read_rds("data/sim_study_3-HR_nsim300_vario_CL_bothNoise.rds") %>% 
   unnest(cols = c("perf")) %>% 
   mutate(n=as.character(n)) %>% 
   mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
   filter(category=="srr") %>% 
-  filter(type=="srr4") %>%  
   filter(noise=="iid") %>% 
-  filter(n!="5000") %>%
+  filter(n=="1000") %>% 
   group_by(category, type, p, n) %>% 
   summarise(mean_value = mean(value))
 
 
 ggplot(dat, 
-       aes(x = 1-p, y = mean_value, col = n)) +
+       aes(x = 1-p, y = mean_value, col = type)) +
   theme(legend.position = "none") +
   theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
-  ylab("Structure recovery rate error") +
+  ylab("") +
   xlab("Exceedance probability k/n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
-ggsave(filename = "HR_srr_CL_d20_kn.pdf", height = 7, width=7)
+ggsave(filename = "HR_srr_n1000_d20_kn.pdf", height = 7, width=7)
 
 
 
 
 
+##### Simulation Study 3: IID Noise, n=2000
 
+dat <- read_rds("data/sim_study_3-HR_nsim300_vario_CL_bothNoise.rds") %>% 
+  unnest(cols = c("perf")) %>% 
+  mutate(n=as.character(n)) %>% 
+  mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
+  filter(category=="srr") %>% 
+  filter(noise=="iid") %>% 
+  filter(n=="2000") %>% 
+  group_by(category, type, p, n) %>% 
+  summarise(mean_value = mean(value))
+
+
+ggplot(dat, 
+       aes(x = 1-p, y = mean_value, col = type)) +
+  theme(legend.position = "none") +
+  theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
+  geom_line(size = 1, alpha = .75) +
+  geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
+  ylab("") +
+  xlab("Exceedance probability k/n") +
+  scale_color_manual(values = rep(my_palette[1:4], 3))+
+  ylim(0,1)
+ggsave(filename = "HR_srr_n2000_d20_kn.pdf", height = 7, width=7)
 
 ###################################
 ##### Simulation Study 3: Tree Noise
 ###################################
 
-##### Simulation Study 3: Tree Noise, Combined Empirical Variogram
+##### Simulation Study 3: Tree Noise, n=500
 
 dat <- read_rds("data/sim_study_3-HR_nsim300_vario_CL_bothNoise.rds") %>% 
   unnest(cols = c("perf")) %>% 
   mutate(n=as.character(n)) %>% 
   mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
   filter(category=="srr") %>% 
-  filter(type=="srr3") %>%  
   filter(noise=="tree") %>% 
-  filter(n!="5000") %>% 
+  filter(n=="500") %>% 
   group_by(category, type, p, n) %>% 
   summarise(mean_value = mean(value))
 
 
 ggplot(dat, 
-       aes(x = 1-p, y = mean_value, col = n)) +
+       aes(x = 1-p, y = mean_value, col = type)) +
   theme(legend.position = "none") +
   theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
   geom_line(size = 1, alpha = .75) +
@@ -419,36 +438,123 @@ ggplot(dat,
   xlab("Exceedance probability k/n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
-ggsave(filename = "HR_srr_vario_d20_kn_treeNoise.pdf", height = 7, width=7)
+ggsave(filename = "HR_srr_n500_d20_kn_treeNoise.pdf", height = 7, width=7)
 
 
 
-##### Simulation Study 3: Tree Noise, Censored Likelihood
+##### Simulation Study 3: Tree Noise, n=1000
 
 dat <- read_rds("data/sim_study_3-HR_nsim300_vario_CL_bothNoise.rds") %>% 
   unnest(cols = c("perf")) %>% 
   mutate(n=as.character(n)) %>% 
   mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
   filter(category=="srr") %>% 
-  filter(type=="srr4") %>%  
   filter(noise=="tree") %>% 
-  filter(n!="5000") %>% 
+  filter(n=="1000") %>% 
   group_by(category, type, p, n) %>% 
   summarise(mean_value = mean(value))
 
 
 ggplot(dat, 
-       aes(x = 1-p, y = mean_value, col = n)) +
+       aes(x = 1-p, y = mean_value, col = type)) +
+  theme(legend.position = "none") +
+  theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
+  geom_line(size = 1, alpha = .75) +
+  geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
+  ylab("") +
+  xlab("Exceedance probability k/n") +
+  scale_color_manual(values = rep(my_palette[1:4], 3))+
+  ylim(0,1)
+ggsave(filename = "HR_srr_n1000_d20_kn_treeNoise.pdf", height = 7, width=7)
+
+
+
+
+##### Simulation Study 3: Tree Noise, n=2000
+
+dat <- read_rds("data/sim_study_3-HR_nsim300_vario_CL_bothNoise.rds") %>% 
+  unnest(cols = c("perf")) %>% 
+  mutate(n=as.character(n)) %>% 
+  mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
+  filter(category=="srr") %>% 
+  filter(noise=="tree") %>% 
+  filter(n=="2000") %>% 
+  group_by(category, type, p, n) %>% 
+  summarise(mean_value = mean(value))
+
+
+ggplot(dat, 
+       aes(x = 1-p, y = mean_value, col = type)) +
+  theme(legend.position = "none") +
+  theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
+  geom_line(size = 1, alpha = .75) +
+  geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
+  ylab("") +
+  xlab("Exceedance probability k/n") +
+  scale_color_manual(values = rep(my_palette[1:4], 3))+
+  ylim(0,1)
+ggsave(filename = "HR_srr_n2000_d20_kn_treeNoise.pdf", height = 7, width=7)
+
+
+
+
+
+###################################
+##### Simulation Study 4: IID Noise
+###################################
+
+##### Simulation Study 4: IID Noise, n=1000
+
+dat <- read_rds("data/sim_study_4-HR_nsim300_d10_20_30_50_100_ML_200_300.rds") %>% 
+  unnest(cols = c("perf")) %>% 
+  mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
+  filter(model=="HR") %>% 
+  filter(category=="srr") %>% 
+  mutate(value=if_else(category=="time", log10(value), value)) %>% 
+  group_by(category, type, d) %>% 
+  summarise(mean_value = mean(value)) %>% 
+  mutate(mean_value = if_else(d > 100 & type == "srr4", NaN, mean_value))
+
+
+
+ggplot(dat, 
+       aes(x = d, y = mean_value, col = type)) +
   theme(legend.position = "none") +
   theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Structure recovery rate error") +
-  xlab("Exceedance probability k/n") +
+  xlab("Dimension d") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
-ggsave(filename = "HR_srr_CL_d20_kn_treeNoise.pdf", height = 7, width=7)
+ggsave(filename = "HR_srr_n1000_dim.pdf", height = 7, width=7)
 
+
+
+
+dat <- read_rds("data/sim_study_4-HR_nsim300_d10_20_30_50_100_ML_200_300.rds") %>% 
+  unnest(cols = c("perf")) %>% 
+  mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
+  filter(model=="HR") %>% 
+  filter(category=="time") %>% 
+  mutate(value=if_else(category=="time", log10(value), value)) %>% 
+  group_by(category, type, d) %>% 
+  summarise(mean_value = mean(value)) %>% 
+  mutate(mean_value = if_else(d > 100 & type == "time4", NaN, mean_value))
+
+
+
+
+ggplot(dat, 
+       aes(x = d, y = mean_value, col = type)) +
+  theme(legend.position = "none") +
+  theme(axis.text=element_text(size=22), axis.title=element_text(size=22)) +
+  geom_line(size = 1, alpha = .75) +
+  geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
+  xlab("Dimension d") +
+  ylab(TeX("Computaiton time in seconds ($log_{10}$ scale)")) +
+  scale_color_manual(values = rep(my_palette[1:4], 3))
+ggsave(filename = "HR_srr_n1000_dim_time.pdf", height = 7, width=7)
 
 
 

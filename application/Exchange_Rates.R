@@ -91,7 +91,7 @@ dev.off()
 
 
 chi.tree <- Gamma2chi(complete_Gamma(Gamma=G.est, graph=MST.est))
-chi.est = emp_chi_mat(data=data, p = p)
+chi.est = emp_chi(data=data, p = p)
 
 pdf(file = paste("Exchange_rate_Tree_ECs.pdf", sep=""), width = 7)
 par(mar=c(4,4,1.6,1.5), mgp=c(2,0.6,0), pty="s", cex.lab=1.6, cex.axis = 1.3, cex.main=2, pch=1, cex=1.3, lwd=1)
