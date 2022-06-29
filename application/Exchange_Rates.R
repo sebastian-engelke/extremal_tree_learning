@@ -113,3 +113,31 @@ pdf(file = paste("chiplot_",i,j,".pdf", sep=""), width = 7)
 par = par(cex = 1.3, cex.lab = 1.5, cex.axis = 1.5, cex.main = 1.5, pty="s", mar = c(5,5,6,2) +.1)
 chiu.est(data[,c(i,j)], u = qseq, nbs=100,blocklength = 1, xlim=c(min(qseq),1),xlab="1-q", ylab=expression(hat(chi)(q)))
 dev.off()
+
+
+
+#### TO be deleted ??
+
+p_vec <- seq(.1, 0.995, length.out = 80)
+emst_list <- lapply(p_vec, FUN = function(p) emst(data = data, p=p, method = "vario")$graph)
+G_list <- lapply(p_vec, FUN = function(p) emp_chi(data = data, p=p))
+
+ll <- length(emst_list)
+lchange <- numeric(ll)
+gamma_mat <- matrix(NA, nrow = ll, ncol =  d*(d-1)/2)
+
+for(i in 1:ll){
+  gamma_mat[i,] <- G_list[[i]][upper.tri(G_list[[i]])]
+  if(i>1) lchange[i] <- length(E(emst_list[[i]] - emst_list[[i-1]]))  
+}
+
+
+i = 40
+par(mfrow=c(1,2))
+#plot(p_vec, lchange)
+plot(p_vec, gamma_mat[,i])
+plot(p_vec, apply(gamma_mat, MARGIN = 1, FUN = function(x) mean((x - min(x)) / max((x - min(x))))))
+plot(p_vec, error_rate)
+
+
+
