@@ -18,6 +18,7 @@ library("graphicalExtremes")
 library("timeSeries")
 library("fGarch")
 library("tidyverse")
+library("latex2exp")
 
 coords_tree <- read_rds("data/coords_exchange_rates.rds")
 
@@ -49,7 +50,8 @@ acf(abs.residus[,10])
 data <- abs.residus 
 graph.full <- make_full_graph(d)
 
-p <- 0.95
+p <- 0.97
+k <- n * (1-p)
 B <- 100
 edge.mat <- matrix(0, nrow=d, ncol=d)
 for(i in 1:B){
@@ -95,10 +97,11 @@ chi.est = emp_chi(data=data, p = p)
 
 pdf(file = paste("Exchange_rate_Tree_ECs.pdf", sep=""), width = 7)
 par(mar=c(4,4,1.6,1.5), mgp=c(2,0.6,0), pty="s", cex.lab=1.6, cex.axis = 1.3, cex.main=2, pch=1, cex=1.3, lwd=1)
-plot(chi.tree, chi.est, ylab="Empirical", main="", las=0, xlim=c(0,1), ylim = c(0,1),
+plot(chi.tree, chi.est, ylab="Empirical", main="", las=1, xlim=c(0,1), ylim = c(0,1),
      xlab="Fitted model", pch=19, lwd=2)
 abline(0,1)
 dev.off()
+
 
 
 ### Exploratory analysis
@@ -116,28 +119,31 @@ dev.off()
 
 
 
-#### TO be deleted ??
+#### Choice of k
 
-p_vec <- seq(.1, 0.995, length.out = 80)
-emst_list <- lapply(p_vec, FUN = function(p) emst(data = data, p=p, method = "vario")$graph)
-G_list <- lapply(p_vec, FUN = function(p) emp_chi(data = data, p=p))
 
-ll <- length(emst_list)
-lchange <- numeric(ll)
-gamma_mat <- matrix(NA, nrow = ll, ncol =  d*(d-1)/2)
-
-for(i in 1:ll){
-  gamma_mat[i,] <- G_list[[i]][upper.tri(G_list[[i]])]
-  if(i>1) lchange[i] <- length(E(emst_list[[i]] - emst_list[[i-1]]))  
+G_tree_err <- function(G, tree){
+  G_compl <- complete_Gamma(Gamma = G, graph = tree)
+  chi <- Gamma2chi(G)
+  chi_compl <- Gamma2chi(G_compl)
+  return(mean(abs( (chi[upper.tri(chi)]-chi_compl[upper.tri(chi)]) )^2))  
 }
 
 
-i = 40
-par(mfrow=c(1,2))
-#plot(p_vec, lchange)
-plot(p_vec, gamma_mat[,i])
-plot(p_vec, apply(gamma_mat, MARGIN = 1, FUN = function(x) mean((x - min(x)) / max((x - min(x))))))
-plot(p_vec, error_rate)
+
+p_vec <- seq(.85, 0.997, length.out = 100)
+emst_list <- lapply(p_vec, FUN = function(p) emst(data = data, p=p, method = "vario")$graph)
+G_list <- lapply(p_vec, FUN = function(p) emp_vario(data = data, p=p))
+
+ll <- length(emst_list)
+tree_err <- numeric(ll)
+for(i in 1:ll){
+  tree_err[i] <- G_tree_err(G = G_list[[i]], tree = emst_list[[i]]) 
+}
 
 
+pdf(file = paste("chi_error.pdf", sep=""), width = 7)
+par(mar=c(4,4,1.6,1.5), mgp=c(2,0.6,0), pty="s", cex.lab=1.6, cex.axis = 1.3, cex.main=2, pch=1, cex=1.3, lwd=1)
+plot(p_vec, tree_err*10^2, xlab="1-q", ylab=TeX("$\\hat{\\Delta}[chi](q) \\times 10^2$"), las=1)
+dev.off()
 

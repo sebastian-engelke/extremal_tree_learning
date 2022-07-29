@@ -77,6 +77,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Wrong edge rate") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3)) +
   ylim(0,.5)
 ggsave(filename = "HR_err_d20.pdf", height = 7, width=7)
@@ -99,6 +100,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Structure recovery rate error") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3)) +
   ylim(0,1)
 ggsave(filename = "HR_srr_d20.pdf", height = 7, width=7)
@@ -123,6 +125,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Wrong edge rate") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,.5)
 ggsave(filename = "dirichlet_err_d20.pdf", height = 7, width=7)
@@ -145,6 +148,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Structure recovery rate error") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
 ggsave(filename = "dirichlet_srr_d20.pdf", height = 7, width=7)
@@ -176,6 +180,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Wrong edge rate") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,.5)
 ggsave(filename = "HR_err_d20_treeNoise.pdf", height = 7, width=7)
@@ -195,6 +200,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Structure recovery rate error") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
 ggsave(filename = "HR_srr_d20_treeNoise.pdf", height = 7, width=7)
@@ -219,6 +225,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Wrong edge rate") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,.5)
 ggsave(filename = "dirichlet_err_d20_treeNoise.pdf", height = 7, width=7)
@@ -239,6 +246,7 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   ylab("Structure recovery rate error") +
+  xlab("Sample size n") +
   scale_color_manual(values = rep(my_palette[1:4], 3))+
   ylim(0,1)
 ggsave(filename = "dirichlet_srr_d20_treeNoise.pdf", height = 7, width=7)
@@ -265,7 +273,8 @@ ggplot(dat,
   #facet_wrap(vars(category), ncol = 1, scales = "free") +
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
-  ylab(TeX("Computaiton time in seconds ($log_{10}$ scale)")) +
+  xlab("Sample size n") +
+  ylab(TeX("Computation time in seconds")) +
   scale_y_log10(breaks=c(0.01, 0.1, 1, 10, 100), labels=c("0.01", "0.1", "1", "10", "100")) +
   scale_color_manual(values = rep(my_palette[1:4], 3))
 ggsave(filename = "HR_time_d20_treeNoise.pdf", height = 7, width=7)
@@ -537,7 +546,7 @@ dat <- read_rds("data/sim_study_4-HR_nsim300_d10_20_30_50_100_ML_200_300.rds") %
   mutate(category = stringr::str_extract(type, "[a-z]+")) %>% 
   filter(model=="HR") %>% 
   filter(category=="time") %>% 
-  mutate(value=if_else(category=="time", log10(value), value)) %>% 
+  #mutate(value=if_else(category=="time", log10(value), value)) %>% 
   group_by(category, type, d) %>% 
   summarise(mean_value = mean(value)) %>% 
   mutate(mean_value = if_else(d > 100 & type == "time4", NaN, mean_value))
@@ -552,8 +561,9 @@ ggplot(dat,
   geom_line(size = 1, alpha = .75) +
   geom_point(size = 2, shape = 21, fill = "white", stroke = 1) +
   xlab("Dimension d") +
-  ylab(TeX("Computaiton time in seconds ($log_{10}$ scale)")) +
-  scale_color_manual(values = rep(my_palette[1:4], 3))
+  ylab(TeX("Computation time in seconds")) +
+  scale_color_manual(values = rep(my_palette[1:4], 3)) +
+  scale_y_log10(breaks=c(0.01, 0.1, 1, 10, 100, 1000, 10000), labels=c("0.01", "0.1", "1", "10", "100", "1000", "10000")) 
 ggsave(filename = "HR_srr_n1000_dim_time.pdf", height = 7, width=7)
 
 
